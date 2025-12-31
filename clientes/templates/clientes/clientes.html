@@ -62,6 +62,7 @@
   <div id="att_cliente">
     <p></p>
     <select id="cliente_select" onchange="dados_cliente()" class="form-control"">
+      <option value=""></option>
       {% for cliente in clientes %}
       <option value="{{cliente.id}}">{{ cliente.nome }}</option>
       {% endfor %}
@@ -80,7 +81,7 @@
       <hr>
       <h3>Carros</h3>
       <div id="carros">
-        
+
       </div>
     </div>
   </div>
