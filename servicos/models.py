@@ -14,6 +14,15 @@ class CategoriaManutencao(models.Model):
         return self.titulo
 
 
+class ServicoAdicional(models.Model):
+    titulo = models.CharField(max_length=50)
+    descricao = models.TextField()
+    preco = models.FloatField()
+
+    def __str__(self) -> str:
+        return self.titulo
+
+
 class Servico(models.Model):
     titulo = models.CharField(max_length=200)
     cliente = models.ForeignKey(Cliente, on_delete=models.SET_NULL, null=True)
@@ -24,6 +33,7 @@ class Servico(models.Model):
     protocolo = models.CharField(
         max_length=52, null=True, blank=True, unique=True)
     identificador = models.CharField(max_length=24, null=True, blank=True)
+    servicos_adicionais = models.ManyToManyField(ServicoAdicional)
 
     def __str__(self) -> str:
         return self.titulo
