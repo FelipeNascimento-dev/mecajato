@@ -36,12 +36,19 @@ function dados_cliente(){
     }).then(function(data){
             console.log(data)
         document.getElementById('form-att-cliente').style.display = "block"
+
+        id_cliente = document.getElementById('id_cliente')
+        id_cliente.value = data['id_cliente']
+
         nome = document.getElementById('nome')
         nome.value = data['cliente']['nome']
+
         sobrenome = document.getElementById('sobrenome')
         sobrenome.value = data['cliente']['sobrenome']
+
         cpf = document.getElementById('cpf')
         cpf.value = data['cliente']['cpf']
+
         email = document.getElementById('email')
         email.value = data['cliente']['email']
 
@@ -70,5 +77,39 @@ function dados_cliente(){
                 </div>\
             </div><br>"
         }    
+    })
+}
+
+function update_cliente(){
+    nome = document.getElementById("nome").value
+    sobrenome = document.getElementById("sobrenome").value
+    email = document.getElementById("email").value
+    cpf = document.getElementById("cpf").value
+    id_cliente = document.getElementById("id_cliente").value
+
+    fetch('/clientes/update_cliente/' + id_cliente + '/', {
+        method: "POST",
+        headers: {
+            'X-CSRFToken': csrf_token,
+        }, 
+        body: JSON.stringify({
+            'nome': nome,
+            'sobrenome': sobrenome,
+            'email': email,
+            'cpf': cpf
+        })
+    }).then(function(result){
+        return result.json()
+    }).then(function(data){
+
+        if (data['status'] == '200'){
+            nome = data['nome']
+            sobrenome = data['sobrenome']
+            email = data['email']
+            cpf = data['cpf']
+            console.log("Dados atualizados com sucesso")
+        }else{
+            console.log("Erro ao atualizar cliente")
+        }
     })
 }

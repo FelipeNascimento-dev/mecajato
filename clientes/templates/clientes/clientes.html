@@ -70,6 +70,7 @@
     <br>
     <hr>
     <div id="form-att-cliente">
+      <input type="hidden" id="id_cliente">
       <p>Nome:</p>
       <input id="nome" type="text" class="form-control">
       <p>Sobrenome:</p>
@@ -78,7 +79,9 @@
       <input id="email" type="email" class="form-control">
       <p>CPF:</p>
       <input id="cpf" type="text" class="form-control">
-      <hr>
+      <br>
+      <input onclick="update_cliente()" type="submit" value="salvar" class="btn btn-success">
+      <hr style="background-color: gray;">
       <h3>Carros</h3>
       <div id="carros">
 
