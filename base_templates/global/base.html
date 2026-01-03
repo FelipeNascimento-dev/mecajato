@@ -37,7 +37,7 @@
           <span class="tooltip">Clientes</span>
         </li>
         <li>
-          <a href="{% url 'servicos:novo_servico' %^}">
+          <a href="{% url 'listar_servico' %}">
             <i class='bx bx-chat' ></i>
             <span class="links_name">Serviços</span>
           </a>
@@ -63,7 +63,6 @@
       <section class="home-section">
           {% block 'dashboard'%}
           {% endblock %}
-
       </section>
 
     {% block 'body' %}

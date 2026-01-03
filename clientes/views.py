@@ -6,6 +6,7 @@ from .models import Cliente, Carro
 import re
 import json
 from django.core import serializers
+from django.views.decorators.http import require_POST
 
 
 def clientes(request):
@@ -63,6 +64,10 @@ def att_cliente(request):
             'carros': carros_json, 'id_cliente': id_cliente}
     return JsonResponse(data)
 
+def excluir_cliente(request, id):
+    cliente = get_object_or_404(Cliente, id=id)
+    cliente.delete()
+    return redirect('clientes')
 
 @csrf_exempt
 def update_carro(request, id):
@@ -80,6 +85,27 @@ def update_carro(request, id):
     carro.ano = ano
     carro.save()
     return HttpResponse("Dados alterados com sucesso!")
+
+@require_POST
+def adicionar_carro(request, id):
+    carro = request.POST.get('carro')
+    placa = request.POST.get('placa')
+    ano = request.POST.get('ano')
+
+    cliente = get_object_or_404(Cliente, id=id)
+
+    # valida placa duplicada
+    if Carro.objects.filter(placa=placa).exists():
+        return JsonResponse({'status': 'error', 'msg': 'Placa já cadastrada'})
+
+    Carro.objects.create(
+        cliente=cliente,
+        carro=carro,
+        placa=placa,
+        ano=ano
+    )
+
+    return JsonResponse({'status': 'ok'})
 
 
 def excluir_carro(request, id):

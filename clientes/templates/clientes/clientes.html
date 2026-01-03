@@ -1,97 +1,168 @@
 {% extends "global/base.html" %}
 {% load static %}
+
 {% block 'head' %}
 <link rel="stylesheet" href="{% static 'global/css/clientes.css' %}" />
 {% endblock %}
+
 {% block 'dashboard' %}
-<div class="container">
-  <div class="row">
-    <div onclick="exibir_form('1')" class="col-md card-dashboard">
-      <p class="text-card">Adicionar clientes</p>
+<div class="container py-4">
+
+  <div class="row justify-content-start gap-3 mb-4">
+    <div onclick="exibir_form('1')" class="card-dashboard">
+      <p class="text-card mb-0">Adicionar clientes</p>
     </div>
 
-    <div onclick="exibir_form('2')" class="col-md card-dashboard">
-      <p class="text-card">Atualizar cliente</p>
+    <div onclick="exibir_form('2')" class="card-dashboard">
+      <p class="text-card mb-0">Atualizar cliente</p>
     </div>
   </div>
+
   <div id="add_cliente" class="adicionar-cliente">
+
     <form action="{% url 'clientes' %}" method="post">
       {% csrf_token %}
-      <div class="row">
-        <div class="col-md">
-          <p>Nome:</p>
-          <input type="text" class="form-control" placeholder="Primeiro nome" name="nome" value="{{ nome }}">
+
+      <div class="row g-2">
+        <div class="col-md-6">
+          <label class="form-label">Nome</label>
+          <input type="text" class="form-control" name="nome" placeholder="Primeiro nome" value="{{ nome }}">
         </div>
-        <div class="col-md">
-          <p>Sobrenome:</p>
-          <input type="text" class="form-control" placeholder="Sobrenome" name="sobrenome" value="{{ sobrenome }}">
+
+        <div class="col-md-6">
+          <label class="form-label">Sobrenome</label>
+          <input type="text" class="form-control" name="sobrenome" placeholder="Sobrenome" value="{{ sobrenome }}">
+        </div>
+
+        <div class="col-md-6 mt-2">
+          <label class="form-label">E-mail</label>
+          <input type="email" class="form-control" name="email" placeholder="nome@email.com" value="{{ email }}">
+        </div>
+
+        <div class="col-md-6 mt-2">
+          <label class="form-label">CPF</label>
+          <input type="text" class="form-control" name="cpf" placeholder="___.___.___-__" value="{{ cpf }}">
         </div>
       </div>
-      <br />
-      <p>E-mail:</p>
-      <input
-        type="email" class="form-control" placeholder="nome@email.com" name="email" value="{{ email }}">
-      <br />
-      <p>CPF:</p>
-      <input
-        type="text" class="form-control" placeholder="___.___.___-__" name="cpf" value="{{ cpf }}">
-      <hr style="background-color: gray" />
-      <div class="add-carros">
-        <h3>Carros</h3>
-        <span class="btn-add-carros" onclick="add_carro()">+ Adicionar um carro</span>
+      <hr class="my-4">
+      <h5 class="mb-2">Carros</h5>
+      <span class="btn-add-carros mb-3 d-inline-block" onclick="add_carro()">+ Adicionar um carro</span>
 
-        <div id="form-carro">
-          {% for carro, placa, ano in carros %}
-            <br>
-            <div class="row">
-              <div class="col-md">
-                <input type='text' placeholder='carro' class='form-control' name='carro' value='{{ carro }}'>
-              </div>
-              <div class="col-md">
-                <input type='text' placeholder='placa' class='form-control' name='placa' value='{{ placa }}'>
-              </div>
-              <div class="col-md">
-                <input type='text' placeholder='ano' class='form-control' name='ano' value='{{ ano }}'>
-              </div>
-            </div>
-          {% endfor %}
+      <div id="form-carro" class="d-flex flex-column gap-3">
+        {% for carro, placa, ano in carros %}
+        <div class="row g-3">
+          <div class="col-md-4">
+            <input class="form-control" name="carro" value="{{ carro }}" placeholder="Carro">
+          </div>
+          <div class="col-md-4">
+            <input class="form-control" name="placa" value="{{ placa }}" placeholder="Placa">
+          </div>
+          <div class="col-md-4">
+            <input class="form-control" name="ano" value="{{ ano }}" placeholder="Ano">
+          </div>
         </div>
+        {% endfor %}
       </div>
 
-      <br/>
-      <input type="submit" value="Cadastrar" class="btn-principal">
+      <div class="mt-4">
+        <button type="submit" class="btn btn-primary">
+          Cadastrar
+        </button>
+      </div>
     </form>
   </div>
-  <div id="att_cliente">
-    <p></p>
-    <select id="cliente_select" onchange="dados_cliente()" class="form-control"">
-      <option value=""></option>
-      {% for cliente in clientes %}
-      <option value="{{cliente.id}}">{{ cliente.nome }}</option>
-      {% endfor %}
-    </select>
-    <br>
-    <hr>
-    <div id="form-att-cliente">
-      <input type="hidden" id="id_cliente">
-      <p>Nome:</p>
-      <input id="nome" type="text" class="form-control">
-      <p>Sobrenome:</p>
-      <input id="sobrenome" type="text" class="form-control">
-      <p>E-mail:</p>
-      <input id="email" type="email" class="form-control">
-      <p>CPF:</p>
-      <input id="cpf" type="text" class="form-control">
-      <br>
-      <input onclick="update_cliente()" type="submit" value="salvar" class="btn btn-success">
-      <hr style="background-color: gray;">
-      <h3>Carros</h3>
-      <div id="carros">
+  <div id="att_cliente" class="mt-5">
 
+    <!-- SELECT CLIENTE -->
+    <div class="row mb-5">
+      <div class="col-md-4">
+        <label class="form-label fw-semibold text-muted">
+          Cliente
+        </label>
+        <select id="cliente_select" onchange="dados_cliente()" class="form-control">
+          <option value="">Selecione um cliente</option>
+          {% for cliente in clientes %}
+          <option value="{{ cliente.id }}">{{ cliente.nome }}</option>
+          {% endfor %}
+        </select>
       </div>
     </div>
-  </div>
-</div>
-<script src="{% static 'global/javascript/cliente.js' %}"></script>
 
-{% endblock %}
+    <!-- DADOS DO CLIENTE -->
+    <div id="form-att-cliente" class="p-4 rounded border border-secondary-subtle bg-dark">
+
+      <input type="hidden" id="id_cliente">
+
+      <h5 class="mb-4">Dados do cliente</h5>
+
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Nome</label>
+          <input id="nome" class="form-control">
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Sobrenome</label>
+          <input id="sobrenome" class="form-control">
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">E-mail</label>
+          <input id="email" class="form-control" type="email">
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">CPF</label>
+          <input id="cpf" class="form-control">
+        </div>
+      </div>
+
+      <div class="mt-4 ">
+        <button onclick="update_cliente()" class="btn btn-success px-4 me-3 mb-2">
+          Salvar alterações
+        </button>
+
+        <button onclick="excluirCliente()" class="btn btn-danger px-4 mb-2">
+          Excluir cliente
+        </button>
+      </div>
+
+      <hr class="my-5">
+
+      <h5 class="mb-3">Carros cadastrados</h5>
+      <div id="carros" class="mb-4"></div>
+
+      <div class="p-3 rounded border border-secondary-subtle bg-dark">
+
+        <h6 class="mb-3 text-muted">Adicionar novo carro</h6>
+
+        <div class="row g-3 align-items-end">
+          <div class="col-md-4">
+            <label class="form-label">Carro</label>
+            <input id="novo_carro" class="form-control" placeholder="Ex: Gol">
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Placa</label>
+            <input id="nova_placa" class="form-control" placeholder="ABC-1234">
+          </div>
+
+          <div class="col-md-2">
+            <label class="form-label">Ano</label>
+            <input id="novo_ano" class="form-control" placeholder="2022">
+          </div>
+
+          <div class="col-md-2">
+            <button onclick="adicionarCarro()" class="btn btn-success w-100">
+              Adicionar
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <script src="{% static 'global/javascript/cliente.js' %}"></script>
+  {% endblock %}
